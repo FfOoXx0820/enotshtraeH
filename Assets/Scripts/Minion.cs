@@ -4,21 +4,32 @@ using UnityEngine;
 
 public class Minion : MonoBehaviour
 {
+    public Player Player;
+    public string name;
     public int type;
     public int attack;
     public int health;
     public int tier;
     public Dictionary<string, bool> traits = new Dictionary<string, bool>() { { "Reborn", false }, { "Taunt", false }, { "Battlecry", false }, { "Windfury", false }, { "Deathrattle", false }, { "Divine Shield", false } };
 
+    public Minion(string name, int type, int attack, int health, int tier, bool[] traits)
+    {
+        this.name = name;
+        this.type = type;
+        this.attack = attack;
+        this.health = health;
+        this.tier = tier;
+        this.traits["Reborn"] = traits[0];
+        this.traits["Taunt"] = traits[1];
+        this.traits["Battlecry"] = traits[2];
+        this.traits["Windfury"] = traits[3];
+        this.traits["Deathrattle"] = traits[4];
+        this.traits["Divine Shield"] = traits[5];
+    }
     public void Attack(Minion enemy)
     {
         Hit(enemy.attack);
         enemy.Hit(attack);
-        if (traits["Windfury"])
-        {
-            traits["Windfury"] = false;
-            Attack(enemy);
-        }
     }
 
     public void Hit(int damage)
@@ -49,7 +60,9 @@ public class Minion : MonoBehaviour
             traits["Reborn"] = false;
         } else
         {
-            Destroy(this.gameObject);
+            Player.number_of_minions -= 1;
+            Player.battleground.Remove(this);
+            gameObject.SetActive(false);
         }
     }
 
