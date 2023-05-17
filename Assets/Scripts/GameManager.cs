@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public Minion minion_sample;
+    public Minion sample;
+    public Player Player1;
+    public Player Player2;
     private void Start()
     {
-        minion_sample = new Minion("sample", 0, 3, 4, 1, new bool[] { false, false, false, false, false, false });
+        //Minion minion = Instantiate(sample, new Vector3(0.0f, 1.0f, 0.0f), Quaternion.identity);
+        Player1.Fight(Player2);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,89 +10,75 @@ public class Player : MonoBehaviour
     public int gold;
     public int hand;
     public int number_of_minions;
+    public int i = 0;
+    private System.Random rand = new System.Random();
     public List<Minion> battleground;
 
     public void Fight(Player opponent)
     {
         number_of_minions = battleground.Count;
         opponent.number_of_minions = opponent.battleground.Count;
-        if (opponent.number_of_minions > number_of_minions)
+        Minion_Attack(this, opponent);
+    }
+
+    public void Minion_Attack(Player attacker, Player opponent)
+    {
+        if (attacker.number_of_minions == 0 || opponent.number_of_minions == 0)
         {
-            opponent.battleground[0].Attack(battleground[Random.Range(0, number_of_minions)]);
+            return;
         }
-        else if (opponent.number_of_minions == number_of_minions)
-        {
-            if (Random.Range(0, 1) == 0)
-            {
-                opponent.battleground[0].Attack(battleground[Random.Range(0, number_of_minions)]);
-            }
-        }
+        Minion attacking_minion = attacker.battleground[attacker.i];
         List<Minion> taunting_minions = new List<Minion>();
-        List<Minion> opponent_taunting_minions = new List<Minion>();
-        foreach (Minion minion in battleground)
+        foreach (Minion minion in opponent.battleground)
         {
-            if (minion.traits["Taunt"])
+            if (minion.traits[4])
             {
                 taunting_minions.Add(minion);
             }
         }
-        foreach (Minion minion in opponent.battleground)
-        {
-            if (minion.traits["Taunt"])
-            {
-                opponent_taunting_minions.Add(minion);
-            }
-        }
-        int i = 0;
-        int j = 0;
-        while (opponent.number_of_minions != 0 && number_of_minions != 0)
-        {
-            if (i >= number_of_minions - 1)
-            {
-                i = 0;
-            }
-            else
-            {
-                i += 1;
-            }
-            Debug.Log("i: " + i);
-            Minion_Attack(this, opponent, opponent_taunting_minions, i);
-            if (opponent.number_of_minions == 0 || number_of_minions == 0)
-            {
-                break;
-            }
-            if (j >= opponent.number_of_minions - 1)
-            {
-                j = 0;
-            }
-            else
-            {
-                j += 1;
-            }
-            Debug.Log("j: " + j);
-            Minion_Attack(opponent, this, taunting_minions, j);
-        }
-        Debug.Log("Done");
-        Debug.Log(number_of_minions);
-        Debug.Log(opponent.number_of_minions);
-    }
-
-    public void Minion_Attack(Player attacker, Player opponent, List<Minion> taunting_minions, int i)
-    {
-        int target = Random.Range(0, opponent.number_of_minions);
         if (taunting_minions.Count != 0)
         {
-            attacker.battleground[i].Attack(taunting_minions[Random.Range(0, taunting_minions.Count)]);
-            if (battleground[i].traits["Windfury"])
+            attacking_minion.Attack(taunting_minions[rand.Next(0, taunting_minions.Count)]);
+            if (attacking_minion.traits[5] && attacking_minion.alive)
             {
-                Minion_Attack(attacker, opponent, taunting_minions, i);
+                if (taunting_minions.Count != 0)
+                {
+                    if (attacker.number_of_minions == 0 || opponent.number_of_minions == 0)
+                    {
+                        return;
+                    }
+                    attacking_minion.Attack(taunting_minions[rand.Next(0, taunting_minions.Count)]);
+                } else
+                {
+                    if (attacker.number_of_minions == 0 || opponent.number_of_minions == 0)
+                    {
+                        return;
+                    }
+                    attacking_minion.Attack(opponent.battleground[rand.Next(0, opponent.number_of_minions)]);
+                }
             }
         }
         else
         {
-            Debug.Log("Target:" + target);
-            attacker.battleground[i].Attack(opponent.battleground[target]);
+            attacking_minion.Attack(opponent.battleground[rand.Next(0, opponent.number_of_minions)]);
+            if (attacking_minion.traits[5] && attacking_minion.alive)
+            {
+                if (attacker.number_of_minions == 0 || opponent.number_of_minions == 0)
+                {
+                    return;
+                }
+                attacking_minion.Attack(opponent.battleground[rand.Next(0, opponent.number_of_minions)]);
+            }
         }
+        if (attacker.i >= attacker.number_of_minions - 1)
+        {
+            attacker.i = 0;
+        }
+        else
+        {
+            attacker.i += 1;
+        }
+        this.Invoke(() => Minion_Attack(opponent, attacker), 1f);
     }
 
     public void Win(Player opponent)
@@ -111,5 +98,19 @@ public class Player : MonoBehaviour
     public void Die()
     {
 
+    }
+}
+
+public static class Utility
+{
+    public static void Invoke(this MonoBehaviour mb, Action f, float delay)
+    {
+        mb.StartCoroutine(InvokeRoutine(f, delay));
+    }
+
+    private static IEnumerator InvokeRoutine(System.Action f, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        f();
     }
 }

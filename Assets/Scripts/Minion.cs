@@ -1,30 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Minion : MonoBehaviour
 {
     public Player Player;
-    public string name;
+    public string _name;
     public int type;
     public int attack;
     public int health;
     public int tier;
-    public Dictionary<string, bool> traits = new Dictionary<string, bool>() { { "Reborn", false }, { "Taunt", false }, { "Battlecry", false }, { "Windfury", false }, { "Deathrattle", false }, { "Divine Shield", false } };
-
-    public Minion(string name, int type, int attack, int health, int tier, bool[] traits)
+    public bool alive;
+    public TextMeshPro attack_text;
+    public TextMeshPro health_text;
+    //BattleCry Deathrattle DivineShield Reborn Taunt Windfury
+    public bool[] traits = { false, false, false, false, false, false };
+    //public Dictionary<string, bool> traits = new Dictionary<string, bool>() { { "Reborn", false }, { "Taunt", false }, { "Battlecry", false }, { "Windfury", false }, { "Deathrattle", false }, { "Divine Shield", false } };
+    private void Start()
     {
-        this.name = name;
-        this.type = type;
-        this.attack = attack;
-        this.health = health;
-        this.tier = tier;
-        this.traits["Reborn"] = traits[0];
-        this.traits["Taunt"] = traits[1];
-        this.traits["Battlecry"] = traits[2];
-        this.traits["Windfury"] = traits[3];
-        this.traits["Deathrattle"] = traits[4];
-        this.traits["Divine Shield"] = traits[5];
+        alive = true;
+        Attack_Update(attack);
+        Health_Update(health);
     }
     public void Attack(Minion enemy)
     {
@@ -34,13 +31,13 @@ public class Minion : MonoBehaviour
 
     public void Hit(int damage)
     {
-        if (traits["Divine Shield"])
+        if (traits[2])
         {
-            traits["Divine Shield"] = false;
+            traits[2] = false;
         }
         else
         {
-            health -= damage;
+            Health_Update(health - damage);
         }
         if (health <= 0)
         {
@@ -50,25 +47,36 @@ public class Minion : MonoBehaviour
 
     public void Die()
     {
-        if (traits["Deathrattle"])
+        if (traits[1])
         {
             
         }
-        if (traits["Reborn"])
+        if (traits[3])
         {
-            health = 1;
-            traits["Reborn"] = false;
+            Health_Update(1);
+            traits[3] = false;
+            Player.i -= 1;
         } else
         {
             Player.number_of_minions -= 1;
             Player.battleground.Remove(this);
-            gameObject.SetActive(false);
+            alive = false;
         }
+    }
+    public void Attack_Update(int new_attack)
+    {
+        attack = new_attack;
+        attack_text.text = attack.ToString();
+    }
+    public void Health_Update(int new_health)
+    {
+        health = new_health;
+        health_text.text = health.ToString();
     }
 
     public void Played()
     {
-        if (traits["Battlecry"])
+        if (traits[0])
         {
 
         }
