@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -25,6 +24,8 @@ public class Minion : MonoBehaviour
     }
     public void Attack(Minion enemy)
     {
+        this.GetComponent<SpriteRenderer>().color = Color.red;
+        enemy.GetComponent<SpriteRenderer>().color = Color.green;
         Hit(enemy.attack);
         enemy.Hit(attack);
     }
@@ -55,12 +56,13 @@ public class Minion : MonoBehaviour
         {
             Health_Update(1);
             traits[3] = false;
-            Player.i -= 1;
+            //Player.i -= 1;
         } else
         {
             Player.number_of_minions -= 1;
             Player.battleground.Remove(this);
             alive = false;
+            gameObject.SetActive(false);
         }
     }
     public void Attack_Update(int new_attack)
@@ -72,13 +74,5 @@ public class Minion : MonoBehaviour
     {
         health = new_health;
         health_text.text = health.ToString();
-    }
-
-    public void Played()
-    {
-        if (traits[0])
-        {
-
-        }
     }
 }
