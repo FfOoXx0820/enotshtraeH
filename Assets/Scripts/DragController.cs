@@ -19,7 +19,7 @@ public class DragController : MonoBehaviour
     }
     void Update()
     {
-        if (_isDragActive && (Input.GetMouseButtonDown(0) || (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended))){
+        if (_isDragActive && (Input.GetMouseButtonUp(0) || (Input.touchCount == 1 && Input.GetTouch(0).phase == TouchPhase.Ended))){
             Drop();
             return;
         }
@@ -57,6 +57,7 @@ public class DragController : MonoBehaviour
     }
     void InitDrag()
     {
+        _lastDragged.LastPosition = _lastDragged.transform.position;
         UpdateDragStatus(true);
     }
 
