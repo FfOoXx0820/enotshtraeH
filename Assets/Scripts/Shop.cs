@@ -16,7 +16,7 @@ public class Shop : MonoBehaviour
     {
         for (int i = 0; i < max_minion_number[Player.tier - 1]; i++)
         {
-            GameObject minion = Instantiate(sample, new Vector3((3.0f - 3.0f * max_minion_number[Player.tier - 1]) / 4.0f + (1.5f * i), 3.0f, 0.0f), Quaternion.identity, gameObject.transform);
+            GameObject minion = Instantiate(sample, new Vector3((3.0f - 3.0f * max_minion_number[Player.tier - 1]) / 4.0f + (1.5f * i), 3.0f, 0.0f), Quaternion.identity/*, gameObject.transform*/);
             shop_minions.Add(minion);
         }
     }
@@ -34,14 +34,18 @@ public class Shop : MonoBehaviour
         }
     }
 
-    public void Buy(GameObject minion)
+    public bool Buy(GameObject minion)
     {
-        Debug.Log("buy");
+        if (Player.hand_number >= 10 || !shop_minions.Contains(minion))
+        {
+            return false;
+        }
         Player.Gold_Update(-3);
         shop_minions.Remove(minion);
         Player.hand.Add(minion);
         Player.hand_number += 1;
-        minion.transform.position = new Vector3(-6.75f + (1.5f * (Player.hand_number - 1)), -4.0f, 0.0f);
+        minion.transform.position = new Vector3(-7.5f + (1.5f * (Player.hand_number - 1)), -4.0f, 0.0f);
+        return true;
     }
 
     public void Up()

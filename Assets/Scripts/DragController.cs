@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DragController : MonoBehaviour
 {
-    public Draggable LastDragged => _lastDragged;
+    public Shop Shop;
     private bool _isDragActive = false;
     private Vector2 _screenPosition;
     private Vector3 _worldPosition;
@@ -68,6 +68,10 @@ public class DragController : MonoBehaviour
 
     void Drop()
     {
+        if (!_lastDragged.IsValidDrop || !Shop.Buy(_lastDragged.gameObject))
+        {
+            _lastDragged.transform.position = _lastDragged.LastPosition;
+        }
         UpdateDragStatus(false);
     }
 
