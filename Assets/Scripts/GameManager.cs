@@ -2,15 +2,40 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
+    public Shop Shop;
     public Player Player1;
     public Player Player2;
+    private float timeValue;
+    private float seconds;
+    public TextMeshProUGUI timer_text;
     private System.Random rand = new System.Random();
     private void Start()
     {
-        //Fight(Player1, Player2);
+        timeValue = 0;
+    }
+    private void Update()
+    {
+        if (timeValue > 0)
+        {
+            timeValue -= Time.deltaTime;
+            seconds = MathF.Floor(timeValue);
+            timer_text.text = seconds.ToString();
+        }
+        else
+        {
+            timeValue = 30;
+            seconds = MathF.Floor(timeValue);
+            timer_text.text = seconds.ToString();
+            TurnEnd();
+        }
+    }
+    public void TurnEnd()
+    {
+        Shop.TurnStart();
     }
     public void Fight(Player Player1, Player Player2)
     {

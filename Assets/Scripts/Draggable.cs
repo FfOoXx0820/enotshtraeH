@@ -5,7 +5,9 @@ using UnityEngine;
 public class Draggable : MonoBehaviour
 {
     public bool IsDragging;
-    public bool IsValidDrop;
+    public bool ValidDropOnBattleGround;
+    public bool ValidDropOnHand;
+    public bool ValidDropOnSell;
     public Vector3 LastPosition;
     private float _movementTime = 15f;
     private Vector3? _movementDestination;
@@ -33,7 +35,18 @@ public class Draggable : MonoBehaviour
     {
         if (other.CompareTag("DropValid"))
         {
-            IsValidDrop = true;
+            if (other.name == "HandSlot")
+            {
+                ValidDropOnHand = true;
+            }
+            else if (other.name == "BattleGroundSlot")
+            {
+                ValidDropOnBattleGround = true;
+            }
+            else if (other.name == "SellSlot")
+            {
+                ValidDropOnSell = true;
+            }
         }
     }
 
@@ -41,7 +54,18 @@ public class Draggable : MonoBehaviour
     {
         if (other.CompareTag("DropValid"))
         {
-            IsValidDrop = false;
+            if (other.name == "HandSlot")
+            {
+                ValidDropOnHand = false;
+            }
+            else if (other.name == "BattleGroundSlot")
+            {
+                ValidDropOnBattleGround = false;
+            }
+            else if (other.name == "SellSlot")
+            {
+                ValidDropOnSell = false;
+            }
         }
     }
 }

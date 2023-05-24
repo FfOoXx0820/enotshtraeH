@@ -5,6 +5,7 @@ using UnityEngine;
 public class DragController : MonoBehaviour
 {
     public Shop Shop;
+    public Player Player;
     private bool _isDragActive = false;
     private Vector2 _screenPosition;
     private Vector3 _worldPosition;
@@ -68,7 +69,26 @@ public class DragController : MonoBehaviour
 
     void Drop()
     {
-        if (!_lastDragged.IsValidDrop || !Shop.Buy(_lastDragged.gameObject))
+        if (_lastDragged.ValidDropOnHand)
+        {
+            if (!Shop.Buy(_lastDragged.gameObject))
+            {
+                _lastDragged.transform.position = _lastDragged.LastPosition;
+            }
+        } else if (_lastDragged.ValidDropOnBattleGround)
+        {
+            if (!Player.Play(_lastDragged.gameObject))
+            {
+                _lastDragged.transform.position = _lastDragged.LastPosition;
+            }
+        }
+        else if (_lastDragged.ValidDropOnSell)
+        {
+            if (!Player.Sell(_lastDragged.gameObject))
+            {
+                _lastDragged.transform.position = _lastDragged.LastPosition;
+            }
+        } else
         {
             _lastDragged.transform.position = _lastDragged.LastPosition;
         }
