@@ -63,9 +63,9 @@ public class Shop : MonoBehaviour
         }
         if (!Player.Gold_Update(-3))
         {
-            Debug.Log("Nomoney");
             return false;
         }
+        minion.GetComponent<Minion_>().Player = Player;
         shop_minions.Remove(minion);
         Player.hand.Add(minion);
         Player.hand_number += 1;
@@ -78,7 +78,6 @@ public class Shop : MonoBehaviour
     {
         if (!Player.Gold_Update(-tavern_tier_up_cost[Player.tier - 1]))
         {
-            Debug.Log("Nomoney");
             return;
         }
         Player.tier += 1;

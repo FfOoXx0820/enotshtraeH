@@ -692,8 +692,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4aa7919d7048bf94391fed74f037ee5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Shop: {fileID: 1701764772}
-  Player: {fileID: 1202677717}
+  Shop1: {fileID: 1701764772}
+  Shop2: {fileID: 667012078}
+  Player1: {fileID: 1202677717}
+  Player2: {fileID: 1854351637}
+  GameManager: {fileID: 1896763872}
 --- !u!4 &353711138
 Transform:
   m_ObjectHideFlags: 0
@@ -855,7 +858,7 @@ GameObject:
   - component: {fileID: 414902946}
   - component: {fileID: 414902945}
   m_Layer: 0
-  m_Name: BattleGroundSlot_2
+  m_Name: BattleGroundSlot
   m_TagString: DropValid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -947,8 +950,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 414902944}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -756, z: 0}
-  m_LocalScale: {x: 1187.9999, y: 215.99998, z: 108}
+  m_LocalPosition: {x: 0, y: -648, z: 0}
+  m_LocalScale: {x: 1187.9999, y: 215.99998, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 667012077}
@@ -1459,7 +1462,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 565345801}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 0.005, y: 0.005, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1705,13 +1708,12 @@ GameObject:
   m_Component:
   - component: {fileID: 661246942}
   - component: {fileID: 661246947}
-  - component: {fileID: 661246948}
-  - component: {fileID: 661246946}
   - component: {fileID: 661246945}
+  - component: {fileID: 661246948}
   - component: {fileID: 661246944}
   - component: {fileID: 661246943}
   m_Layer: 0
-  m_Name: Card
+  m_Name: Minion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1726,7 +1728,7 @@ Transform:
   m_GameObject: {fileID: 661246941}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 100, z: 108}
+  m_LocalScale: {x: 50.000004, y: 50.000004, z: 107.99999}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 620204949}
@@ -1802,28 +1804,6 @@ MonoBehaviour:
   ValidDropOnHand: 0
   ValidDropOnSell: 0
   LastPosition: {x: 0, y: 0, z: 0}
---- !u!114 &661246946
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 661246941}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14459244e61264c4a99618011c657a6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Player: {fileID: 1202677717}
-  _name: 
-  type: 0
-  attack: 1
-  health: 4
-  tier: 1
-  alive: 0
-  attack_text: {fileID: 0}
-  health_text: {fileID: 536311040}
-  traits: 000001000000
 --- !u!212 &661246947
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1885,16 +1865,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 661246941}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81b9379e27093cd469ac394adb1b703f, type: 3}
+  m_Script: {fileID: 11500000, guid: 98a4237dc0d1ee841aee70132f747af1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  card: {fileID: 11400000, guid: 034e737a592181443a3e5a2abb3a66a8, type: 2}
-  nameText: {fileID: 0}
-  descriptionText: {fileID: 0}
+  Player: {fileID: 1202677717}
+  Minion: {fileID: 11400000, guid: 0d01eb85bfc9c2a448b7eec3e31265b3, type: 2}
+  nameText: {fileID: 1871625785}
+  descriptionText: {fileID: 533366179}
   artworkImage: {fileID: 812093892}
   manaText: {fileID: 1185312222}
-  attackText: {fileID: 620204950}
-  healthText: {fileID: 536311040}
+  attack_text: {fileID: 620204950}
+  health_text: {fileID: 536311040}
+  alive: 0
 --- !u!1 &667012076
 GameObject:
   m_ObjectHideFlags: 0
@@ -1953,7 +1935,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27c1c5c5f97fbdd459236db7e8b33922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sample: {fileID: 0}
+  sample: {fileID: 661246941}
   Player: {fileID: 1854351637}
   tavern_tier_text: {fileID: 1837783494}
   tavern_tier_cost_text: {fileID: 32652158}
@@ -2103,8 +2085,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 674334326}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -971.9999, z: 0}
-  m_LocalScale: {x: 1619.9999, y: 215.99998, z: 108}
+  m_LocalPosition: {x: 0, y: -972, z: 0}
+  m_LocalScale: {x: 1619.9999, y: 215.99998, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1701764769}
@@ -2271,7 +2253,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 812093890}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2866,7 +2848,7 @@ GameObject:
   - component: {fileID: 1169622513}
   - component: {fileID: 1169622512}
   m_Layer: 0
-  m_Name: BattleGroundSlot_1
+  m_Name: BattleGroundSlot
   m_TagString: DropValid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2958,8 +2940,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1169622511}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -756, z: 0}
-  m_LocalScale: {x: 1187.9999, y: 215.99998, z: 108}
+  m_LocalPosition: {x: 0, y: -648, z: 0}
+  m_LocalScale: {x: 1187.9999, y: 215.99998, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1701764769}
@@ -3241,8 +3223,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1191545409}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.000061035156, z: 0}
-  m_LocalScale: {x: 1187.9999, y: 108, z: 108}
+  m_LocalPosition: {x: 0, y: -27.000061, z: 0}
+  m_LocalScale: {x: 1187.9999, y: 54, z: 108}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1701764769}
@@ -3703,7 +3685,7 @@ Transform:
   m_GameObject: {fileID: 1700516154}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -971.9999, z: 0}
-  m_LocalScale: {x: 1619.9999, y: 215.99998, z: 108}
+  m_LocalScale: {x: 1619.9999, y: 215.99998, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 667012077}
@@ -3883,7 +3865,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27c1c5c5f97fbdd459236db7e8b33922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sample: {fileID: 0}
+  sample: {fileID: 661246941}
   Player: {fileID: 1202677717}
   tavern_tier_text: {fileID: 845097772}
   tavern_tier_cost_text: {fileID: 102945323}
@@ -4285,7 +4267,7 @@ MonoBehaviour:
   Shop2: {fileID: 667012078}
   Player1: {fileID: 1202677717}
   Player2: {fileID: 1854351637}
-  turn_count: 0
+  player_turn_count: 0
   combatting: 0
   timer_text: {fileID: 758616787}
   VS_text: {fileID: 1303907391}

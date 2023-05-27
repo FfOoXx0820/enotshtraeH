@@ -47,6 +47,7 @@ public class Draggable : MonoBehaviour
             {
                 ValidDropOnSell = true;
             }
+            Debug.Log(other.name + " true");
         }
     }
 
@@ -66,6 +67,7 @@ public class Draggable : MonoBehaviour
             {
                 ValidDropOnSell = false;
             }
+            Debug.Log(other.name + " false");
         }
     }
 }

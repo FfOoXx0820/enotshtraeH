@@ -44,6 +44,7 @@ public class Player : MonoBehaviour
             gold_text.text = gold.ToString();
             return true;
         }
+        Debug.Log("Nomoney");
         return false;
     }
 
@@ -58,14 +59,14 @@ public class Player : MonoBehaviour
         {
             return false;
         }
-        if (minion.GetComponent<Minion>().traits[0])
+        if (minion.GetComponent<Minion_>().Minion.traits[0])
         {
 
         }
         Remove_minion_from_hand(minion);
         battleground.Add(minion.GetComponent<Minion_>());
         hand_number -= 1;
-        minion.transform.position = new Vector3(-4.75f + 1.5f * (battleground.Count - 1), -2.0f, 0.0f);
+        minion.transform.position = new Vector3(-4.75f + 1.5f * (battleground.Count - 1), -1.0f, 0.0f);
         minion.transform.parent = BattleGroundSlot.transform;
         return true;
     }
