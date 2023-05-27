@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     public int i = -1;
     public GameObject BattleGroundSlot;
     public TextMeshProUGUI gold_text;
-    public List<Minion> battleground;
+    public List<Minion_> battleground;
     public List<GameObject> hand;
 
     private void Start()
@@ -26,9 +26,9 @@ public class Player : MonoBehaviour
     public void Win(Player opponent)
     {
         int damage = tier;
-        foreach (Minion minion in battleground)
+        foreach (Minion_ minion in battleground)
         {
-            damage += minion.tier;
+            damage += minion.Minion.tier;
         }
         opponent.health -= damage;
         if (opponent.health <= 0)
@@ -63,7 +63,7 @@ public class Player : MonoBehaviour
 
         }
         Remove_minion_from_hand(minion);
-        battleground.Add(minion.GetComponent<Minion>());
+        battleground.Add(minion.GetComponent<Minion_>());
         hand_number -= 1;
         minion.transform.position = new Vector3(-4.75f + 1.5f * (battleground.Count - 1), -2.0f, 0.0f);
         minion.transform.parent = BattleGroundSlot.transform;
@@ -71,10 +71,10 @@ public class Player : MonoBehaviour
     }
     public bool Sell(GameObject minion)
     {
-        if (!battleground.Contains(minion.GetComponent<Minion>())){
+        if (!battleground.Contains(minion.GetComponent<Minion_>())){
             return false;
         }
-        Remove_minion_from_battleground(minion.GetComponent<Minion>());
+        Remove_minion_from_battleground(minion.GetComponent<Minion_>());
         Gold_Update(1);
         Destroy(minion);
         return true;
@@ -89,7 +89,7 @@ public class Player : MonoBehaviour
         }
         hand.Remove(minion);
     }
-    public void Remove_minion_from_battleground(Minion minion)
+    public void Remove_minion_from_battleground(Minion_ minion)
     {
         int index = battleground.IndexOf(minion);
         for (int i = index; i < battleground.Count; i++)

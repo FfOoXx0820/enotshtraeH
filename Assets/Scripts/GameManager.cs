@@ -16,8 +16,8 @@ public class GameManager : MonoBehaviour
     public bool combatting;
     public TextMeshProUGUI timer_text;
     public TextMeshProUGUI VS_text;
-    private List<Minion> temp1;
-    private List<Minion> temp2;
+    private List<Minion_> temp1;
+    private List<Minion_> temp2;
     private System.Random rand = new System.Random();
     private void Start()
     {
@@ -85,13 +85,13 @@ public class GameManager : MonoBehaviour
         Player1.BattleGroundSlot.transform.position = new Vector3(0.0f, -2.0f, 0.0f);
         Player2.BattleGroundSlot.transform.position = new Vector3(0.0f, 2.0f, 0.0f);
         int j = 0;
-        foreach (Minion m in Player1.battleground)
+        foreach (Minion_ m in Player1.battleground)
         {
             m.gameObject.transform.position = new Vector3(m.gameObject.transform.position.x, -2.0f, 0.0f);
             j += 1;
         }
         j = 0;
-        foreach (Minion m in Player2.battleground)
+        foreach (Minion_ m in Player2.battleground)
         {
             m.gameObject.transform.position = new Vector3(m.gameObject.transform.position.x, 2.0f, 0.0f);
             j += 1;
@@ -122,12 +122,12 @@ public class GameManager : MonoBehaviour
         Player1.battleground = temp1;
         Player2.battleground = temp2;
         int j = 0;
-        foreach (Minion m in Player1.battleground)
+        foreach (Minion_ m in Player1.battleground)
         {
             m.gameObject.transform.position = new Vector3(m.gameObject.transform.position.x, -4.0f, 0.0f);
             j += 1;
         }
-        foreach (Minion m in Player2.battleground)
+        foreach (Minion_ m in Player2.battleground)
         {
             m.gameObject.transform.position = new Vector3(-11.0f, -2.0f, 0.0f);
         }
@@ -153,17 +153,17 @@ public class GameManager : MonoBehaviour
             CombatEnd();
             return;
         }
-        Minion attacking_minion = attacker.battleground[attacker.i];
-        List<Minion> taunting_minions = new List<Minion>();
-        foreach (Minion minion in opponent.battleground)
+        Minion_ attacking_minion = attacker.battleground[attacker.i];
+        List<Minion_> taunting_minions = new List<Minion_>();
+        foreach (Minion_ minion in opponent.battleground)
         {
             minion.GetComponent<SpriteRenderer>().color = Color.white;
-            if (minion.traits[4])
+            if (minion.Minion.traits[4])
             {
                 taunting_minions.Add(minion);
             }
         }
-        foreach (Minion minion in attacker.battleground)
+        foreach (Minion_ minion in attacker.battleground)
         {
             minion.GetComponent<SpriteRenderer>().color = Color.white;
         }
@@ -175,7 +175,7 @@ public class GameManager : MonoBehaviour
         {
             attacking_minion.Attack(opponent.battleground[rand.Next(0, opponent.number_of_minions)]);
         }
-        if (attacking_minion.traits[5] && attacking_minion.alive && !Windfury)
+        if (attacking_minion.Minion.traits[5] && attacking_minion.alive && !Windfury)
         {
             if (Check_Win(attacker, opponent))
             {

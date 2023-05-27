@@ -26,7 +26,7 @@ public class Shop : MonoBehaviour
         gameObject.SetActive(true);
         for (int i = 0; i < max_minion_number[Player.tier - 1]; i++)
         {
-            GameObject minion = Instantiate(sample, new Vector3((3.0f - 3.0f * max_minion_number[Player.tier - 1]) / 4.0f + (1.5f * i), 3.0f, 0.0f), Quaternion.identity/*, gameObject.transform*/);
+            GameObject minion = Instantiate(sample, new Vector3(-max_minion_number[Player.tier - 1] + 1 + (2.0f * i), 3.0f, 0.0f), Quaternion.identity, gameObject.transform);
             shop_minions.Add(minion);
         }
         turn += 1;
@@ -50,7 +50,7 @@ public class Shop : MonoBehaviour
         }
         for (int i = 0; i < max_minion_number[Player.tier - 1]; i++)
         {
-            GameObject minion = Instantiate(sample, new Vector3((3.0f - 3.0f * max_minion_number[Player.tier - 1]) / 4.0f + (1.5f * i), 3.0f, 0.0f), Quaternion.identity);
+            GameObject minion = Instantiate(sample, new Vector3(-max_minion_number[Player.tier - 1] + 1 + (2.0f * i), 3.0f, 0.0f), Quaternion.identity, gameObject.transform);
             shop_minions.Add(minion);
         }
     }
