@@ -6,41 +6,96 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public Shop Shop;
+    public Shop Shop1;
+    public Shop Shop2;
     public Player Player1;
     public Player Player2;
+    public int turn_count;
     private float timeValue;
     private float seconds;
+    public bool combatting;
     public TextMeshProUGUI timer_text;
+    public TextMeshProUGUI VS_text;
+    private List<Minion> temp1;
+    private List<Minion> temp2;
     private System.Random rand = new System.Random();
     private void Start()
     {
-        timeValue = 0;
+        turn_count = 0;
+        VS_text.gameObject.SetActive(false);
+        Shop1.gameObject.SetActive(false);
+        Shop2.gameObject.SetActive(false);
+        timeValue = 30;
+        Shop1.TurnStart();
     }
-    private void Update()
-    {
-        if (timeValue > 0)
+    private void Update() 
+    { 
+        if (!combatting)
         {
-            timeValue -= Time.deltaTime;
-            seconds = MathF.Floor(timeValue);
-            timer_text.text = seconds.ToString();
-        }
-        else
-        {
-            timeValue = 30;
-            seconds = MathF.Floor(timeValue);
-            timer_text.text = seconds.ToString();
-            TurnEnd();
+            if (timeValue > 0)
+            {
+                timeValue -= Time.deltaTime;
+                seconds = MathF.Floor(timeValue);
+                timer_text.text = seconds.ToString();
+            }
+            else
+            {
+                timeValue = 30;
+                seconds = MathF.Floor(timeValue);
+                timer_text.text = seconds.ToString();
+                TurnEnd();
+            }
         }
     }
     public void TurnEnd()
     {
-        Shop.TurnStart();
+        Player1.BattleGroundSlot.SetActive(false);
+        Player2.BattleGroundSlot.SetActive(false);
+        turn_count += 1;
+        if (turn_count == 1)
+        {
+            foreach (GameObject m in Shop1.shop_minions)
+            {
+                Destroy(m);
+            }
+            Shop1.gameObject.SetActive(false);
+            Shop2.gameObject.SetActive(true);
+            Shop2.TurnStart();
+        } else if (turn_count == 2)
+        {
+            foreach (GameObject m in Shop2.shop_minions)
+            {
+                Destroy(m);
+            }
+            VS_text.gameObject.SetActive(true);
+            Shop2.gameObject.SetActive(false);
+            Fight(Player1, Player2);
+            turn_count = 0;
+        }
     }
     public void Fight(Player Player1, Player Player2)
     {
+        Player1.BattleGroundSlot.SetActive(true);
+        Player2.BattleGroundSlot.SetActive(true);
+        combatting = true;
+        temp1 = Player1.battleground;
+        temp2 = Player2.battleground;
         Player1.number_of_minions = Player1.battleground.Count;
         Player2.number_of_minions = Player2.battleground.Count;
+        Player1.BattleGroundSlot.transform.position = new Vector3(0.0f, -2.0f, 0.0f);
+        Player2.BattleGroundSlot.transform.position = new Vector3(0.0f, 2.0f, 0.0f);
+        int j = 0;
+        foreach (Minion m in Player1.battleground)
+        {
+            m.gameObject.transform.position = new Vector3(m.gameObject.transform.position.x, -2.0f, 0.0f);
+            j += 1;
+        }
+        j = 0;
+        foreach (Minion m in Player2.battleground)
+        {
+            m.gameObject.transform.position = new Vector3(m.gameObject.transform.position.x, 2.0f, 0.0f);
+            j += 1;
+        }
         if (Player1.number_of_minions > Player2.number_of_minions)
         {
             Minion_Attack(Player1, Player2, false);
@@ -62,6 +117,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void CombatEnd()
+    {
+        Player1.battleground = temp1;
+        Player2.battleground = temp2;
+        int j = 0;
+        foreach (Minion m in Player1.battleground)
+        {
+            m.gameObject.transform.position = new Vector3(m.gameObject.transform.position.x, -4.0f, 0.0f);
+            j += 1;
+        }
+        foreach (Minion m in Player2.battleground)
+        {
+            m.gameObject.transform.position = new Vector3(-11.0f, -2.0f, 0.0f);
+        }
+        combatting = false;
+        Shop1.TurnStart();
+    }
+
     public void Minion_Attack(Player attacker, Player opponent, bool Windfury)
     {
         if (!Windfury)
@@ -75,10 +148,9 @@ public class GameManager : MonoBehaviour
                 attacker.i += 1;
             }
         }
-        Debug.Log("A:" + attacker.number_of_minions + "index: " + attacker.i);
-        Debug.Log("O:" + opponent.number_of_minions);
         if (Check_Win(attacker, opponent))
         {
+            CombatEnd();
             return;
         }
         Minion attacking_minion = attacker.battleground[attacker.i];
@@ -107,6 +179,7 @@ public class GameManager : MonoBehaviour
         {
             if (Check_Win(attacker, opponent))
             {
+                CombatEnd();
                 return;
             }
             this.Invoke(() => Minion_Attack(attacker, opponent, true), 1f);

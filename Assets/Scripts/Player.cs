@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public int hand_number;
     public int number_of_minions;
     public int i = -1;
+    public GameObject BattleGroundSlot;
     public TextMeshProUGUI gold_text;
     public List<Minion> battleground;
     public List<GameObject> hand;
@@ -64,7 +65,8 @@ public class Player : MonoBehaviour
         Remove_minion_from_hand(minion);
         battleground.Add(minion.GetComponent<Minion>());
         hand_number -= 1;
-        minion.transform.position = new Vector3(-7.5f + 1.5f * (battleground.Count - 1), -2.0f, 0.0f);
+        minion.transform.position = new Vector3(-4.75f + 1.5f * (battleground.Count - 1), -2.0f, 0.0f);
+        minion.transform.parent = BattleGroundSlot.transform;
         return true;
     }
     public bool Sell(GameObject minion)
@@ -83,7 +85,7 @@ public class Player : MonoBehaviour
         int index = hand.IndexOf(minion);
         for (int i = index; i < hand.Count; i++)
         {
-            hand[i].transform.position = new Vector3(-7.5f + 1.5f * (i - 1), -4.0f, 0.0f);
+            hand[i].transform.position = new Vector3(-6.75f + 1.5f * (i - 1), -4.0f, 0.0f);
         }
         hand.Remove(minion);
     }
@@ -92,7 +94,7 @@ public class Player : MonoBehaviour
         int index = battleground.IndexOf(minion);
         for (int i = index; i < battleground.Count; i++)
         {
-            battleground[i].transform.position = new Vector3(-7.5f + 1.5f * (i - 1), -2.0f, 0.0f);
+            battleground[i].transform.position = new Vector3(-4.75f + 1.5f * (i - 1), -2.0f, 0.0f);
         }
         battleground.Remove(minion);
     }
