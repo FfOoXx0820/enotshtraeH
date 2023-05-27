@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class DragController : MonoBehaviour
 {
-    public Shop Shop;
-    public Player Player;
+    public Shop Shop1;
+    public Shop Shop2;
+    public Player Player1;
+    public Player Player2;
+    public GameManager GameManager;
     private bool _isDragActive = false;
     private Vector2 _screenPosition;
     private Vector3 _worldPosition;
@@ -69,28 +72,60 @@ public class DragController : MonoBehaviour
 
     void Drop()
     {
-        if (_lastDragged.ValidDropOnHand)
+        if (GameManager.player_turn_count == 0)
         {
-            if (!Shop.Buy(_lastDragged.gameObject))
+            if (_lastDragged.ValidDropOnHand)
+            {
+                if (!Shop1.Buy(_lastDragged.gameObject))
+                {
+                    _lastDragged.transform.position = _lastDragged.LastPosition;
+                }
+            }
+            else if (_lastDragged.ValidDropOnBattleGround)
+            {
+                if (!Player1.Play(_lastDragged.gameObject))
+                {
+                    _lastDragged.transform.position = _lastDragged.LastPosition;
+                }
+            }
+            else if (_lastDragged.ValidDropOnSell)
+            {
+                if (!Player1.Sell(_lastDragged.gameObject))
+                {
+                    _lastDragged.transform.position = _lastDragged.LastPosition;
+                }
+            }
+            else
             {
                 _lastDragged.transform.position = _lastDragged.LastPosition;
             }
-        } else if (_lastDragged.ValidDropOnBattleGround)
+        } else if (GameManager.player_turn_count == 1)
         {
-            if (!Player.Play(_lastDragged.gameObject))
+            if (_lastDragged.ValidDropOnHand)
+            {
+                if (!Shop2.Buy(_lastDragged.gameObject))
+                {
+                    _lastDragged.transform.position = _lastDragged.LastPosition;
+                }
+            }
+            else if (_lastDragged.ValidDropOnBattleGround)
+            {
+                if (!Player2.Play(_lastDragged.gameObject))
+                {
+                    _lastDragged.transform.position = _lastDragged.LastPosition;
+                }
+            }
+            else if (_lastDragged.ValidDropOnSell)
+            {
+                if (!Player2.Sell(_lastDragged.gameObject))
+                {
+                    _lastDragged.transform.position = _lastDragged.LastPosition;
+                }
+            }
+            else
             {
                 _lastDragged.transform.position = _lastDragged.LastPosition;
             }
-        }
-        else if (_lastDragged.ValidDropOnSell)
-        {
-            if (!Player.Sell(_lastDragged.gameObject))
-            {
-                _lastDragged.transform.position = _lastDragged.LastPosition;
-            }
-        } else
-        {
-            _lastDragged.transform.position = _lastDragged.LastPosition;
         }
         UpdateDragStatus(false);
     }

@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public Shop Shop2;
     public Player Player1;
     public Player Player2;
-    public int turn_count;
+    public int player_turn_count;
     private float timeValue;
     private float seconds;
     public bool combatting;
@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     private System.Random rand = new System.Random();
     private void Start()
     {
-        turn_count = 0;
+        player_turn_count = 0;
         VS_text.gameObject.SetActive(false);
         Shop1.gameObject.SetActive(false);
         Shop2.gameObject.SetActive(false);
@@ -51,8 +51,8 @@ public class GameManager : MonoBehaviour
     {
         Player1.BattleGroundSlot.SetActive(false);
         Player2.BattleGroundSlot.SetActive(false);
-        turn_count += 1;
-        if (turn_count == 1)
+        player_turn_count += 1;
+        if (player_turn_count == 1)
         {
             foreach (GameObject m in Shop1.shop_minions)
             {
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
             Shop1.gameObject.SetActive(false);
             Shop2.gameObject.SetActive(true);
             Shop2.TurnStart();
-        } else if (turn_count == 2)
+        } else if (player_turn_count == 2)
         {
             foreach (GameObject m in Shop2.shop_minions)
             {
@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
             VS_text.gameObject.SetActive(true);
             Shop2.gameObject.SetActive(false);
             Fight(Player1, Player2);
-            turn_count = 0;
+            player_turn_count = 0;
         }
     }
     public void Fight(Player Player1, Player Player2)
