@@ -10,9 +10,9 @@ public class Player : MonoBehaviour
     public int hand_number;
     public int number_of_minions;
     public int i = -1;
-    public GameObject BattleGroundSlot;
     public TextMeshProUGUI gold_text;
     public List<Minion_> battleground;
+    public List<Minion_> temp;
     public List<GameObject> hand;
 
     private void Start()
@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
         {
             return false;
         }
-        if (minion.GetComponent<Minion_>().Minion.traits[0])
+        if (minion.GetComponent<Minion_>().traits[0])
         {
 
         }
@@ -67,7 +67,7 @@ public class Player : MonoBehaviour
         battleground.Add(minion.GetComponent<Minion_>());
         hand_number -= 1;
         minion.transform.position = new Vector3(-4.75f + 1.5f * (battleground.Count - 1), -1.0f, 0.0f);
-        minion.transform.parent = BattleGroundSlot.transform;
+        minion.GetComponent<Minion_>().Player = this;
         return true;
     }
     public bool Sell(GameObject minion)

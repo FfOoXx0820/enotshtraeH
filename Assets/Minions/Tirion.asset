@@ -12,12 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81eb0b00d2301bf46bc6666023297025, type: 3}
   m_Name: Tirion
   m_EditorClassIdentifier: 
-  name: Tirion
+  name: Failure
   description: Hi
   type: 0
-  attack: 6
-  health: 6
-  manaCost: 8
-  tier: 0
-  traits: 000000000000
+  default_attack: 1
+  default_health: 3
+  tier: 1
+  default_traits: 000000000000
   artwork: {fileID: 21300000, guid: 25cef1bb73e99b346a44fba23bed55ea, type: 3}

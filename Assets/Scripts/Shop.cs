@@ -17,12 +17,9 @@ public class Shop : MonoBehaviour
     private void Start()
     {
         turn = 0;
-        Player.BattleGroundSlot.SetActive(false);
-
     }
     public void TurnStart()
     {
-        Player.BattleGroundSlot.SetActive(true);
         gameObject.SetActive(true);
         for (int i = 0; i < max_minion_number[Player.tier - 1]; i++)
         {
@@ -46,7 +43,7 @@ public class Shop : MonoBehaviour
         }
         foreach (GameObject m in shop_minions)
         {
-            Destroy(m);
+            Destroy(m.gameObject);
         }
         for (int i = 0; i < max_minion_number[Player.tier - 1]; i++)
         {

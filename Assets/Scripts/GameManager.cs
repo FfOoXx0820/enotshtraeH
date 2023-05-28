@@ -16,8 +16,6 @@ public class GameManager : MonoBehaviour
     public bool combatting;
     public TextMeshProUGUI timer_text;
     public TextMeshProUGUI VS_text;
-    private List<Minion_> temp1;
-    private List<Minion_> temp2;
     private System.Random rand = new System.Random();
     private void Start()
     {
@@ -25,7 +23,7 @@ public class GameManager : MonoBehaviour
         VS_text.gameObject.SetActive(false);
         Shop1.gameObject.SetActive(false);
         Shop2.gameObject.SetActive(false);
-        timeValue = 30;
+        timeValue =10;
         Shop1.TurnStart();
     }
     private void Update() 
@@ -40,7 +38,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                timeValue = 30;
+                timeValue = 10;
                 seconds = MathF.Floor(timeValue);
                 timer_text.text = seconds.ToString();
                 TurnEnd();
@@ -49,14 +47,12 @@ public class GameManager : MonoBehaviour
     }
     public void TurnEnd()
     {
-        Player1.BattleGroundSlot.SetActive(false);
-        Player2.BattleGroundSlot.SetActive(false);
         player_turn_count += 1;
         if (player_turn_count == 1)
         {
             foreach (GameObject m in Shop1.shop_minions)
             {
-                Destroy(m);
+                Destroy(m.gameObject);
             }
             Shop1.gameObject.SetActive(false);
             Shop2.gameObject.SetActive(true);
@@ -65,79 +61,70 @@ public class GameManager : MonoBehaviour
         {
             foreach (GameObject m in Shop2.shop_minions)
             {
-                Destroy(m);
+                Destroy(m.gameObject);
             }
-            VS_text.gameObject.SetActive(true);
             Shop2.gameObject.SetActive(false);
-            Fight(Player1, Player2);
             player_turn_count = 0;
+            Fight(Player1, Player2);
         }
     }
     public void Fight(Player Player1, Player Player2)
     {
-        Player1.BattleGroundSlot.SetActive(true);
-        Player2.BattleGroundSlot.SetActive(true);
         combatting = true;
-        temp1 = Player1.battleground;
-        temp2 = Player2.battleground;
+        VS_text.gameObject.SetActive(true);
         Player1.number_of_minions = Player1.battleground.Count;
         Player2.number_of_minions = Player2.battleground.Count;
-        Player1.BattleGroundSlot.transform.position = new Vector3(0.0f, -2.0f, 0.0f);
-        Player2.BattleGroundSlot.transform.position = new Vector3(0.0f, 2.0f, 0.0f);
-        int j = 0;
         foreach (Minion_ m in Player1.battleground)
         {
-            m.gameObject.transform.position = new Vector3(m.gameObject.transform.position.x, -2.0f, 0.0f);
-            j += 1;
+            Minion_ clone = Instantiate(m, new Vector3(m.gameObject.transform.position.x, -2.0f, 0.0f), Quaternion.identity, Player1.transform);
+            Player1.temp.Add(clone);
         }
-        j = 0;
         foreach (Minion_ m in Player2.battleground)
         {
-            m.gameObject.transform.position = new Vector3(m.gameObject.transform.position.x, 2.0f, 0.0f);
-            j += 1;
+            Minion_ clone = Instantiate(m, new Vector3(m.gameObject.transform.position.x, 2.0f, 0.0f), Quaternion.identity, Player2.transform);
+            Player2.temp.Add(clone);
         }
         if (Player1.number_of_minions > Player2.number_of_minions)
         {
-            Minion_Attack(Player1, Player2, false);
+            this.Invoke(() => Minion_Attack(Player1, Player2, false), 1f);
         }
         else if (Player1.number_of_minions < Player2.number_of_minions)
         {
-            Minion_Attack(Player2, Player1, false);
+            this.Invoke(() => Minion_Attack(Player2, Player1, false), 1f);
         }
         else
         {
             if (rand.Next(0, 2) == 0)
             {
-                Minion_Attack(Player1, Player2, false);
+                this.Invoke(() => Minion_Attack(Player1, Player2, false), 1f);
             }
             else
             {
-                Minion_Attack(Player2, Player1, false);
+                this.Invoke(() => Minion_Attack(Player2, Player1, false), 1f);
             }
         }
     }
 
     private void CombatEnd()
     {
-        Player1.battleground = temp1;
-        Player2.battleground = temp2;
-        int j = 0;
-        foreach (Minion_ m in Player1.battleground)
+        foreach (Minion_ m in Player1.temp)
         {
-            m.gameObject.transform.position = new Vector3(m.gameObject.transform.position.x, -4.0f, 0.0f);
-            j += 1;
+            Destroy(m.gameObject);
         }
-        foreach (Minion_ m in Player2.battleground)
+        Player1.temp = new List<Minion_>();
+        foreach (Minion_ m in Player2.temp)
         {
-            m.gameObject.transform.position = new Vector3(-11.0f, -2.0f, 0.0f);
+            Destroy(m.gameObject);
         }
+        Player2.temp = new List<Minion_>();
         combatting = false;
+        VS_text.gameObject.SetActive(false);
         Shop1.TurnStart();
     }
 
-    public void Minion_Attack(Player attacker, Player opponent, bool Windfury)
+    public void Minion_Attack(Player attacker, Player opponent, bool Windfuried)
     {
-        if (!Windfury)
+        if (!Windfuried)
         {
             if (attacker.i >= attacker.number_of_minions - 1)
             {
@@ -153,17 +140,17 @@ public class GameManager : MonoBehaviour
             CombatEnd();
             return;
         }
-        Minion_ attacking_minion = attacker.battleground[attacker.i];
+        Minion_ attacking_minion = attacker.temp[attacker.i];
         List<Minion_> taunting_minions = new List<Minion_>();
-        foreach (Minion_ minion in opponent.battleground)
+        foreach (Minion_ minion in opponent.temp)
         {
             minion.GetComponent<SpriteRenderer>().color = Color.white;
-            if (minion.Minion.traits[4])
+            if (minion.traits[4])
             {
                 taunting_minions.Add(minion);
             }
         }
-        foreach (Minion_ minion in attacker.battleground)
+        foreach (Minion_ minion in attacker.temp)
         {
             minion.GetComponent<SpriteRenderer>().color = Color.white;
         }
@@ -173,19 +160,16 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            attacking_minion.Attack(opponent.battleground[rand.Next(0, opponent.number_of_minions)]);
+            attacking_minion.Attack(opponent.temp[rand.Next(0, opponent.number_of_minions)]);
         }
-        if (attacking_minion.Minion.traits[5] && attacking_minion.alive && !Windfury)
+        if (attacking_minion.traits[5] && attacking_minion.alive && !Windfuried)
         {
-            if (Check_Win(attacker, opponent))
-            {
-                CombatEnd();
-                return;
-            }
             this.Invoke(() => Minion_Attack(attacker, opponent, true), 1f);
+            Debug.Log("Invoked");
         } else
         {
             this.Invoke(() => Minion_Attack(opponent, attacker, false), 1f);
+            Debug.Log("Invoked");
         }
     }
 
@@ -195,17 +179,20 @@ public class GameManager : MonoBehaviour
         {
             if (opponent.number_of_minions == 0)
             {
+                Debug.Log("Win");
                 return true;
             }
             else
             {
                 opponent.Win(attacker);
+                Debug.Log("Win");
                 return true;
             }
         }
         else if (opponent.number_of_minions == 0)
         {
             attacker.Win(opponent);
+            Debug.Log("Win");
             return true;
         }
         return false;

@@ -14,77 +14,84 @@ public class Minion_ : MonoBehaviour {
 
 	public Image artworkImage;
 
-	public TextMeshPro manaText;
+	public TextMeshPro tierText;
 	public TextMeshPro attack_text;
 	public TextMeshPro health_text;
+
+    public int attack;
+    public int health;
+    public bool[] traits;
 
     public bool alive;
     private void Start()
     {
+        attack = Minion.default_attack;
+        attack = Minion.default_health;
+        traits = Minion.default_traits;
         nameText.text = Minion.name;
         descriptionText.text = Minion.description;
 
         artworkImage.sprite = Minion.artwork;
 
-        manaText.text = Minion.manaCost.ToString();
-        attack_text.text = Minion.attack.ToString();
-        health_text.text = Minion.health.ToString();
+        tierText.text = Minion.tier.ToString();
+        attack_text.text = Minion.default_attack.ToString();
+        health_text.text = Minion.default_health.ToString();
         alive = true;
-        Attack_Update(Minion.attack);
-        Health_Update(Minion.health);
+        Attack_Update(Minion.default_attack);
+        Health_Update(Minion.default_health);
     }
     public void Attack(Minion_ enemy)
     {
         this.GetComponent<SpriteRenderer>().color = Color.red;
         enemy.GetComponent<SpriteRenderer>().color = Color.green;
-        Hit(enemy.Minion.attack);
-        enemy.Hit(Minion.attack);
+        Hit(enemy.attack);
+        enemy.Hit(attack);
     }
 
     public void Hit(int damage)
     {
-        if (Minion.traits[2])
+        if (traits[2])
         {
-            Minion.traits[2] = false;
+            traits[2] = false;
         }
         else
         {
-            Health_Update(Minion.health - damage);
+            Health_Update(health - damage);
         }
-        if (Minion.health <= 0)
+        if (health <= 0)
         {
             Die();
+            Debug.Log("Die");
         }
     }
 
     public void Die()
     {
-        if (Minion.traits[1])
+        if (traits[1])
         {
 
         }
-        if (Minion.traits[3])
+        if (traits[3])
         {
             Health_Update(1);
-            Minion.traits[3] = false;
+            traits[3] = false;
             //Player.i -= 1;
         }
         else
         {
             Player.number_of_minions -= 1;
-            Player.battleground.Remove(this);
             alive = false;
             gameObject.SetActive(false);
         }
     }
     public void Attack_Update(int new_attack)
     {
-        Minion.attack = new_attack;
-        attack_text.text = Minion.attack.ToString();
+        attack = new_attack;
+        attack_text.text = attack.ToString();
     }
     public void Health_Update(int new_health)
     {
-        Minion.health = new_health;
-        health_text.text = Minion.health.ToString();
+        health = new_health;
+        health_text.text = health.ToString();
     }
 }
