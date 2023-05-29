@@ -66,7 +66,7 @@ public class Shop : MonoBehaviour
         shop_minions.Remove(minion);
         Player.hand.Add(minion);
         Player.hand_number += 1;
-        minion.transform.position = new Vector3(-6.75f + (1.5f * (Player.hand_number - 1)), -4.0f, 0.0f);
+        minion.transform.position = new Vector3(-6.75f + (1.5f * (Player.hand_number - 1)), -3.5f, 0.0f);
         minion.transform.parent = gameObject.transform;
         return true;
     }

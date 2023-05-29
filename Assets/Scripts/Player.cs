@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public int number_of_minions;
     public int i = -1;
     public TextMeshProUGUI gold_text;
+    public TextMeshProUGUI health_text;
     public List<Minion_> battleground;
     public List<Minion_> temp;
     public List<GameObject> hand;
@@ -30,11 +31,7 @@ public class Player : MonoBehaviour
         {
             damage += minion.Minion.tier;
         }
-        opponent.health -= damage;
-        if (opponent.health <= 0)
-        {
-            opponent.Die();
-        }
+        opponent.Health_Update(damage);
     }
     public bool Gold_Update(int change)
     {
@@ -46,6 +43,15 @@ public class Player : MonoBehaviour
         }
         Debug.Log("Nomoney");
         return false;
+    }
+    public void Health_Update(int damage)
+    {
+        health -= damage;
+        health_text.text = health.ToString();
+        if (health <= 0)
+        {
+            Die();
+        }
     }
 
     public void Die()
@@ -86,7 +92,7 @@ public class Player : MonoBehaviour
         int index = hand.IndexOf(minion);
         for (int i = index; i < hand.Count; i++)
         {
-            hand[i].transform.position = new Vector3(-6.75f + 1.5f * (i - 1), -4.0f, 0.0f);
+            hand[i].transform.position = new Vector3(-6.75f + 1.5f * (i - 1), -3.5f, 0.0f);
         }
         hand.Remove(minion);
     }
@@ -95,7 +101,7 @@ public class Player : MonoBehaviour
         int index = battleground.IndexOf(minion);
         for (int i = index; i < battleground.Count; i++)
         {
-            battleground[i].transform.position = new Vector3(-4.75f + 1.5f * (i - 1), -2.0f, 0.0f);
+            battleground[i].transform.position = new Vector3(-4.75f + 1.5f * (i - 1), -1.0f, 0.0f);
         }
         battleground.Remove(minion);
     }

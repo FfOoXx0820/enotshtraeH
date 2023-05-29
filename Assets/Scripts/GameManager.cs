@@ -16,14 +16,20 @@ public class GameManager : MonoBehaviour
     public bool combatting;
     public TextMeshProUGUI timer_text;
     public TextMeshProUGUI VS_text;
+    public GameObject TurnEndButton;
+
     private System.Random rand = new System.Random();
     private void Start()
     {
+        Player1.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.1f, 0.0f);
+        Player2.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.1f, 0.0f);
         player_turn_count = 0;
         VS_text.gameObject.SetActive(false);
         Shop1.gameObject.SetActive(false);
         Shop2.gameObject.SetActive(false);
-        timeValue =10;
+        Player1.gameObject.SetActive(true);
+        Player2.gameObject.SetActive(false);
+        timeValue = 200;
         Shop1.TurnStart();
     }
     private void Update() 
@@ -38,9 +44,6 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                timeValue = 10;
-                seconds = MathF.Floor(timeValue);
-                timer_text.text = seconds.ToString();
                 TurnEnd();
             }
         }
@@ -50,6 +53,11 @@ public class GameManager : MonoBehaviour
         player_turn_count += 1;
         if (player_turn_count == 1)
         {
+            Player1.gameObject.SetActive(false);
+            Player2.gameObject.SetActive(true);
+            timeValue = 200;
+            seconds = MathF.Floor(timeValue);
+            timer_text.text = seconds.ToString();
             foreach (GameObject m in Shop1.shop_minions)
             {
                 Destroy(m.gameObject);
@@ -59,17 +67,23 @@ public class GameManager : MonoBehaviour
             Shop2.TurnStart();
         } else if (player_turn_count == 2)
         {
+            timer_text.gameObject.SetActive(false);
             foreach (GameObject m in Shop2.shop_minions)
             {
                 Destroy(m.gameObject);
             }
             Shop2.gameObject.SetActive(false);
             player_turn_count = 0;
+            TurnEndButton.SetActive(false);
             Fight(Player1, Player2);
         }
     }
     public void Fight(Player Player1, Player Player2)
     {
+        Player1.gameObject.SetActive(true);
+        Player2.gameObject.SetActive(true);
+        Player1.health_text.gameObject.transform.position = new Vector3(0.0f, -4.5f, 0.0f);
+        Player2.health_text.gameObject.transform.position = new Vector3(0.0f, 4.5f, 0.0f);
         combatting = true;
         VS_text.gameObject.SetActive(true);
         Player1.number_of_minions = Player1.battleground.Count;
@@ -107,6 +121,12 @@ public class GameManager : MonoBehaviour
 
     private void CombatEnd()
     {
+        Player1.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.1f, 0.0f);
+        Player2.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.1f, 0.0f);
+        timer_text.gameObject.SetActive(true);
+        timeValue = 200;
+        seconds = MathF.Floor(timeValue);
+        timer_text.text = seconds.ToString();
         foreach (Minion_ m in Player1.temp)
         {
             Destroy(m.gameObject);
@@ -119,7 +139,10 @@ public class GameManager : MonoBehaviour
         Player2.temp = new List<Minion_>();
         combatting = false;
         VS_text.gameObject.SetActive(false);
+        Player1.gameObject.SetActive(true);
+        Player2.gameObject.SetActive(false);
         Shop1.TurnStart();
+        TurnEndButton.SetActive(true);
     }
 
     public void Minion_Attack(Player attacker, Player opponent, bool Windfuried)
@@ -137,7 +160,7 @@ public class GameManager : MonoBehaviour
         }
         if (Check_Win(attacker, opponent))
         {
-            CombatEnd();
+            Invoke("CombatEnd", 1f);
             return;
         }
         Minion_ attacking_minion = attacker.temp[attacker.i];
