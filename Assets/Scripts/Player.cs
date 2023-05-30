@@ -10,12 +10,17 @@ public class Player : MonoBehaviour
     public int hand_number;
     public int number_of_minions;
     public int i = -1;
+    public GameObject _hand;
+    public GameObject _battleground;
     public TextMeshProUGUI gold_text;
     public TextMeshProUGUI health_text;
     public List<Minion_> battleground;
     public List<Minion_> temp;
     public List<GameObject> hand;
-
+    public List<GameObject> shop_minions;
+    public int[] tavern_tier_up_cost = { 6, 7, 8, 9, 10 };
+    public bool Freezed;
+    public int turn;
     private void Start()
     {
         health = 30;
@@ -23,6 +28,8 @@ public class Player : MonoBehaviour
         hand_number = 0;
         number_of_minions = 0;
         i = -1;
+        Freezed = false;
+        turn = 0;
     }
     public void Win(Player opponent)
     {
@@ -73,6 +80,7 @@ public class Player : MonoBehaviour
         battleground.Add(minion.GetComponent<Minion_>());
         hand_number -= 1;
         minion.transform.position = new Vector3(-4.75f + 1.5f * (battleground.Count - 1), -1.0f, 0.0f);
+        minion.transform.parent = _battleground.transform;
         minion.GetComponent<Minion_>().Player = this;
         return true;
     }

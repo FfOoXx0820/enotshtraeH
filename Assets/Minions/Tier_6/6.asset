@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81eb0b00d2301bf46bc6666023297025, type: 3}
   m_Name: 6
   m_EditorClassIdentifier: 
-  name: 
-  description: 
+  name: 6
+  description: 6
   type: 0
-  default_attack: 0
-  default_health: 0
-  tier: 0
+  default_attack: 6
+  default_health: 6
+  tier: 6
   default_traits: 000000000000
   artwork: {fileID: 0}

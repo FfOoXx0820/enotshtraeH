@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class DragController : MonoBehaviour
 {
-    public Shop Shop1;
-    public Shop Shop2;
+    public Shop Shop;
     public Player Player1;
     public Player Player2;
     public GameManager GameManager;
@@ -76,7 +75,7 @@ public class DragController : MonoBehaviour
         {
             if (_lastDragged.ValidDropOnHand)
             {
-                if (!Shop1.Buy(_lastDragged.gameObject))
+                if (!Shop.Buy(_lastDragged.gameObject))
                 {
                     _lastDragged.transform.position = _lastDragged.LastPosition;
                 }
@@ -103,7 +102,7 @@ public class DragController : MonoBehaviour
         {
             if (_lastDragged.ValidDropOnHand)
             {
-                if (!Shop2.Buy(_lastDragged.gameObject))
+                if (!Shop.Buy(_lastDragged.gameObject))
                 {
                     _lastDragged.transform.position = _lastDragged.LastPosition;
                 }
