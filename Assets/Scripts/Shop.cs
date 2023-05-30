@@ -14,6 +14,7 @@ public class Shop : MonoBehaviour
     public int[] max_minion_number = { 3, 4, 4, 5, 5, 6 };
     public List<GameObject> shop_minions;
     public int turn;
+    public int[] number_of_available_minions;
     public Minion[] tier_1_minions;
     public Minion[] tier_2_minions;
     public Minion[] tier_3_minions;
@@ -25,7 +26,12 @@ public class Shop : MonoBehaviour
     private System.Random rand = new System.Random();
     private void Start()
     {
-        minion_pool = new List<Minion[]>() { tier_1_minions, tier_2_minions, tier_3_minions, tier_4_minions, tier_5_minions, tier_6_minions};
+        number_of_available_minions = new int[6];
+           minion_pool = new List<Minion[]>() { tier_1_minions, tier_2_minions, tier_3_minions, tier_4_minions, tier_5_minions, tier_6_minions};
+        for (int i = 0; i < 6; i++)
+        {
+            number_of_available_minions[i] = minion_pool[i].Length;
+        }
         Freezed = false;
         turn = 0;
     }
@@ -34,9 +40,21 @@ public class Shop : MonoBehaviour
         gameObject.SetActive(true);
         if (!Freezed)
         {
+            int n = 0;
+            for (int i = 0; i < Player.tier; i++)
+            {
+                n += number_of_available_minions[i];
+            }
             for (int i = 0; i < max_minion_number[Player.tier - 1]; i++)
             {
-                sample.GetComponent<Minion_>().Minion = minion_pool[Player.tier - 1][rand.Next(0, minion_pool[Player.tier - 1].Length)];
+                int r = rand.Next(0, n);
+                int j = 0;
+                while (r >= number_of_available_minions[j])
+                {
+                    r -= number_of_available_minions[j];
+                    j += 1;
+                }
+                sample.GetComponent<Minion_>().Minion = minion_pool[j][r];
                 GameObject minion = Instantiate(sample, new Vector3(-max_minion_number[Player.tier - 1] + 1 + (2.0f * i), 3.0f, 0.0f), Quaternion.identity, gameObject.transform);
                 shop_minions.Add(minion);
             }
@@ -67,9 +85,21 @@ public class Shop : MonoBehaviour
         {
             Destroy(m);
         }
+        int n = 0;
+        for (int i = 0; i < Player.tier; i++)
+        {
+            n += number_of_available_minions[i];
+        }
         for (int i = 0; i < max_minion_number[Player.tier - 1]; i++)
         {
-            sample.GetComponent<Minion_>().Minion = minion_pool[Player.tier - 1][rand.Next(0, minion_pool[Player.tier - 1].Length)];
+            int r = rand.Next(0, n);
+            int j = 0;
+            while (r >= number_of_available_minions[j])
+            {
+                r -= number_of_available_minions[j];
+                j += 1;
+            }
+            sample.GetComponent<Minion_>().Minion = minion_pool[j][r];
             GameObject minion = Instantiate(sample, new Vector3(-max_minion_number[Player.tier - 1] + 1 + (2.0f * i), 3.0f, 0.0f), Quaternion.identity, gameObject.transform);
             shop_minions.Add(minion);
         }
