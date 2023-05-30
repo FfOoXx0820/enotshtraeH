@@ -58,9 +58,12 @@ public class GameManager : MonoBehaviour
             timeValue = 200;
             seconds = MathF.Floor(timeValue);
             timer_text.text = seconds.ToString();
-            foreach (GameObject m in Shop1.shop_minions)
+            if (!Shop1.Freezed)
             {
-                Destroy(m.gameObject);
+                foreach (GameObject m in Shop1.shop_minions)
+                {
+                    Destroy(m);
+                }
             }
             Shop1.gameObject.SetActive(false);
             Shop2.gameObject.SetActive(true);
@@ -68,9 +71,12 @@ public class GameManager : MonoBehaviour
         } else if (player_turn_count == 2)
         {
             timer_text.gameObject.SetActive(false);
-            foreach (GameObject m in Shop2.shop_minions)
+            if (!Shop2.Freezed)
             {
-                Destroy(m.gameObject);
+                foreach (GameObject m in Shop2.shop_minions)
+                {
+                    Destroy(m);
+                }
             }
             Shop2.gameObject.SetActive(false);
             player_turn_count = 0;

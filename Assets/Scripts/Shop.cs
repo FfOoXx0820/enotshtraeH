@@ -9,22 +9,37 @@ public class Shop : MonoBehaviour
     public Player Player;
     public TextMeshProUGUI tavern_tier_text;
     public TextMeshProUGUI tavern_tier_cost_text;
+    public bool Freezed;
     public int[] tavern_tier_up_cost = { 6, 7, 8, 9, 10};
     public int[] max_minion_number = { 3, 4, 4, 5, 5, 6 };
     public List<GameObject> shop_minions;
     public int turn;
-    //public Minion[] available_minions;
+    public Minion[] tier_1_minions;
+    public Minion[] tier_2_minions;
+    public Minion[] tier_3_minions;
+    public Minion[] tier_4_minions;
+    public Minion[] tier_5_minions;
+    public Minion[] tier_6_minions;
+    public List<Minion[]> minion_pool;
+
+    private System.Random rand = new System.Random();
     private void Start()
     {
+        minion_pool = new List<Minion[]>() { tier_1_minions, tier_2_minions, tier_3_minions, tier_4_minions, tier_5_minions, tier_6_minions};
+        Freezed = false;
         turn = 0;
     }
     public void TurnStart()
     {
         gameObject.SetActive(true);
-        for (int i = 0; i < max_minion_number[Player.tier - 1]; i++)
+        if (!Freezed)
         {
-            GameObject minion = Instantiate(sample, new Vector3(-max_minion_number[Player.tier - 1] + 1 + (2.0f * i), 3.0f, 0.0f), Quaternion.identity, gameObject.transform);
-            shop_minions.Add(minion);
+            for (int i = 0; i < max_minion_number[Player.tier - 1]; i++)
+            {
+                sample.GetComponent<Minion_>().Minion = minion_pool[Player.tier - 1][rand.Next(0, minion_pool[Player.tier - 1].Length)];
+                GameObject minion = Instantiate(sample, new Vector3(-max_minion_number[Player.tier - 1] + 1 + (2.0f * i), 3.0f, 0.0f), Quaternion.identity, gameObject.transform);
+                shop_minions.Add(minion);
+            }
         }
         turn += 1;
         tavern_tier_text.text = Player.tier.ToString();
@@ -33,9 +48,16 @@ public class Shop : MonoBehaviour
         tavern_tier_up_cost[Player.tier - 1] -= 1;
         tavern_tier_cost_text.text = "Up(" + tavern_tier_up_cost[Player.tier - 1].ToString() + ")";
     }
+    
+    public void Freeze()
+    {
+        Debug.Log(Freezed == false);
+        Freezed = Freezed == false;
+    }
 
     public void Reroll()
     {
+        Freezed = false;
         if (!Player.Gold_Update(-1))
         {
             Debug.Log("Nomoney");
@@ -43,10 +65,11 @@ public class Shop : MonoBehaviour
         }
         foreach (GameObject m in shop_minions)
         {
-            Destroy(m.gameObject);
+            Destroy(m);
         }
         for (int i = 0; i < max_minion_number[Player.tier - 1]; i++)
         {
+            sample.GetComponent<Minion_>().Minion = minion_pool[Player.tier - 1][rand.Next(0, minion_pool[Player.tier - 1].Length)];
             GameObject minion = Instantiate(sample, new Vector3(-max_minion_number[Player.tier - 1] + 1 + (2.0f * i), 3.0f, 0.0f), Quaternion.identity, gameObject.transform);
             shop_minions.Add(minion);
         }
