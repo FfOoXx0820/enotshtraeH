@@ -7,80 +7,58 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public Shop Shop;
-    public Player Player1;
-    public Player Player2;
-    public int player_turn_count;
-    private float timeValue;
-    private float seconds;
-    public bool combatting;
-    public TextMeshProUGUI timer_text;
+    public GameObject PlayerSample;
+    public Canvas Canvas;
+    public GameObject StartMenu_panel;
+    public Player[] Players;
+    public int turn_count;
+    public int number_of_players;
+    public bool shopping_phase;
     public TextMeshProUGUI VS_text;
-    public GameObject TurnEndButton;
+    public TMP_InputField PlayerName_Inputfield;
+    public TextMeshProUGUI[] Player_Slot;
 
     private System.Random rand = new System.Random();
     private void Start()
     {
-        Player1.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.1f, 0.0f);
-        Player2.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.1f, 0.0f);
-        player_turn_count = 0;
-        VS_text.gameObject.SetActive(false);
+        Players = new Player[8];
         Shop.gameObject.SetActive(false);
-        Player1.gameObject.SetActive(true);
-        Player2.gameObject.SetActive(false);
-        timeValue = 200;
-        Shop.Player = Player1;
-        Shop.TurnStart();
+        PlayerSample.gameObject.SetActive(false);
+        VS_text.gameObject.SetActive(false);
+        shopping_phase = false;
     }
-    private void Update() 
-    { 
-        if (!combatting)
-        {
-            if (timeValue > 0)
-            {
-                timeValue -= Time.deltaTime;
-                seconds = MathF.Floor(timeValue);
-                timer_text.text = seconds.ToString();
-            }
-            else
-            {
-                TurnEnd();
-            }
-        }
-    }
-    public void TurnEnd()
+    public void AddPlayer()
     {
-        player_turn_count += 1;
-        if (player_turn_count == 1)
+        if (number_of_players == 8)
         {
-            Player1.gameObject.SetActive(false);
-            Player2.gameObject.SetActive(true);
-            timeValue = 200;
-            seconds = MathF.Floor(timeValue);
-            timer_text.text = seconds.ToString();
-            if (!Player1.Freezed)
-            {
-                foreach (GameObject m in Player1.shop_minions)
-                {
-                    Destroy(m);
-                }
-            }
-            Shop.Player = Player2;
-            Shop.TurnStart();
-        } else if (player_turn_count == 2)
-        {
-            timer_text.gameObject.SetActive(false);
-            if (!Player2.Freezed)
-            {
-                foreach (GameObject m in Player2.shop_minions)
-                {
-                    Destroy(m);
-                }
-            }
-            Shop.gameObject.SetActive(false);
-            player_turn_count = 0;
-            TurnEndButton.SetActive(false);
-            Fight(Player1, Player2);
+            Debug.Log("Full");
+            return;
         }
+        if (!(PlayerName_Inputfield.text == ""))
+        {
+            Player_Slot[number_of_players].text = PlayerName_Inputfield.text;
+            GameObject player = Instantiate(PlayerSample, Vector3.zero, Quaternion.identity, Canvas.transform);
+            Players[number_of_players] = player.GetComponent<Player>();
+            player.GetComponent<Player>().name = PlayerName_Inputfield.text;
+            number_of_players += 1;
+        }
+    }
+    public void GameStart()
+    {
+        StartMenu_panel.SetActive(false);
+        foreach (Player p in Players)
+        {
+            p.gameObject.SetActive(true);
+            p.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.1f, 0.0f);
+            p.gameObject.SetActive(false);
+        }
+        turn_count = -1;
+        Shop.NextTurn();
+    }
+
+    public void StartCombat()
+    {
+        shopping_phase = false;
     }
     public void Fight(Player Player1, Player Player2)
     {
@@ -92,7 +70,6 @@ public class GameManager : MonoBehaviour
         Player2._hand.SetActive(false);
         Player1.health_text.gameObject.transform.position = new Vector3(0.0f, -4.5f, 0.0f);
         Player2.health_text.gameObject.transform.position = new Vector3(0.0f, 4.5f, 0.0f);
-        combatting = true;
         VS_text.gameObject.SetActive(true);
         Player1.number_of_minions = Player1.battleground.Count;
         Player2.number_of_minions = Player2.battleground.Count;
@@ -129,30 +106,20 @@ public class GameManager : MonoBehaviour
 
     private void CombatEnd()
     {
-        Player1.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.1f, 0.0f);
-        Player2.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.1f, 0.0f);
-        timer_text.gameObject.SetActive(true);
-        timeValue = 200;
-        seconds = MathF.Floor(timeValue);
-        timer_text.text = seconds.ToString();
-        foreach (Minion_ m in Player1.temp)
-        {
-            Destroy(m.gameObject);
-        }
-        Player1.temp = new List<Minion_>();
-        foreach (Minion_ m in Player2.temp)
-        {
-            Destroy(m.gameObject);
-        }
-        Player2.temp = new List<Minion_>();
-        combatting = false;
         VS_text.gameObject.SetActive(false);
-        Player1.gameObject.SetActive(false);
-        Player1.gameObject.SetActive(true);
-        Player2.gameObject.SetActive(false);
-        Shop.Player = Player1;
-        Shop.TurnStart();
-        TurnEndButton.SetActive(true);
+        foreach (Player p in Players)
+        {
+            foreach (Minion_ m in p.temp)
+            {
+                Destroy(m.gameObject);
+            }
+            p.temp = new List<Minion_>();
+            p.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.1f, 0.0f);
+            p._hand.SetActive(true);
+            p._battleground.SetActive(true);
+            p.gameObject.SetActive(false);
+        }
+        Shop.NextTurn();
     }
 
     public void Minion_Attack(Player attacker, Player opponent, bool Windfuried)
@@ -174,7 +141,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         Minion_ attacking_minion = attacker.temp[attacker.i];
-        List<Minion_> taunting_minions = new List<Minion_>();
+        List<Minion_> taunting_minions = new();
         foreach (Minion_ minion in opponent.temp)
         {
             minion.GetComponent<SpriteRenderer>().color = Color.white;

@@ -4,6 +4,7 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
+    public new string name;
     public int health;
     public int tier;
     public int gold;
