@@ -54,20 +54,23 @@ public class Shop : MonoBehaviour
     public void NextTurn()
     {
         GameManager.turn_count += 1;
-        if (!Player.Freezed)
-        {
-            foreach (GameObject m in Player.shop_minions)
-            {
-                Destroy(m);
-            }
-        }
-        Player.gameObject.SetActive(false);
-        if (GameManager.turn_count < GameManager.Players.Length)
+        Debug.Log(GameManager.turn_count);
+        if (GameManager.turn_count < GameManager.number_of_players)
         {
             timeValue = 200;
             seconds = MathF.Floor(timeValue);
             timer_text.text = seconds.ToString();
-            Player = GameManager.Players[GameManager.turn_count];
+            if (!(Player == null)){
+                Player.gameObject.SetActive(false);
+                if (!Player.Freezed)
+                {
+                    foreach (GameObject m in Player.shop_minions)
+                    {
+                        Destroy(m);
+                    }
+                }
+            }
+            Player = GameManager.Players[GameManager.turn_count].GetComponent<Player>();
             GameManager.shopping_phase = true;
             gameObject.SetActive(true);
             Player.gameObject.SetActive(true);
@@ -100,8 +103,16 @@ public class Shop : MonoBehaviour
             Player.tavern_tier_up_cost[Player.tier - 1] -= 1;
             tavern_tier_cost_text.text = "Up(" + Player.tavern_tier_up_cost[Player.tier - 1].ToString() + ")";
         }
-        else if (GameManager.turn_count == GameManager.Players.Length)
+        else if (GameManager.turn_count == GameManager.number_of_players)
         {
+            if (!Player.Freezed)
+            {
+                foreach (GameObject m in Player.shop_minions)
+                {
+                    Destroy(m);
+                }
+            }
+            Player.gameObject.SetActive(false);
             gameObject.SetActive(false);
             GameManager.turn_count = -1;
             GameManager.StartCombat();

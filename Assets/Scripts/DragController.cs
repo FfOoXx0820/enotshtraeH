@@ -78,14 +78,14 @@ public class DragController : MonoBehaviour
         }
         else if (_lastDragged.ValidDropOnBattleGround)
         {
-            if (!GameManager.Players[GameManager.turn_count].Play(_lastDragged.gameObject))
+            if (!GameManager.Players[GameManager.turn_count].GetComponent<Player>().Play(_lastDragged.gameObject))
             {
                 _lastDragged.transform.position = _lastDragged.LastPosition;
             }
         }
         else if (_lastDragged.ValidDropOnSell)
         {
-            if (!GameManager.Players[GameManager.turn_count].Sell(_lastDragged.gameObject))
+            if (!GameManager.Players[GameManager.turn_count].GetComponent<Player>().Sell(_lastDragged.gameObject))
             {
                 _lastDragged.transform.position = _lastDragged.LastPosition;
             }

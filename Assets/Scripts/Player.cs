@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     public GameObject _hand;
     public GameObject _battleground;
     public TextMeshProUGUI gold_text;
+    public TextMeshProUGUI name_text;
     public TextMeshProUGUI health_text;
     public List<Minion_> battleground;
     public List<Minion_> temp;

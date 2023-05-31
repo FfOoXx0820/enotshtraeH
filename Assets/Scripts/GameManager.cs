@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     public GameObject PlayerSample;
     public Canvas Canvas;
     public GameObject StartMenu_panel;
-    public Player[] Players;
+    public GameObject[] Players;
     public int turn_count;
     public int number_of_players;
     public bool shopping_phase;
@@ -21,9 +21,10 @@ public class GameManager : MonoBehaviour
     private System.Random rand = new System.Random();
     private void Start()
     {
-        Players = new Player[8];
+        number_of_players = 0;
+        Players = new GameObject[8];
         Shop.gameObject.SetActive(false);
-        PlayerSample.gameObject.SetActive(false);
+        PlayerSample.gameObject.SetActive(true);
         VS_text.gameObject.SetActive(false);
         shopping_phase = false;
     }
@@ -37,19 +38,27 @@ public class GameManager : MonoBehaviour
         if (!(PlayerName_Inputfield.text == ""))
         {
             Player_Slot[number_of_players].text = PlayerName_Inputfield.text;
-            GameObject player = Instantiate(PlayerSample, Vector3.zero, Quaternion.identity, Canvas.transform);
-            Players[number_of_players] = player.GetComponent<Player>();
+            GameObject player = Instantiate(PlayerSample, new Vector3(0.0f, -100.0f, 0.0f), Quaternion.identity, Canvas.transform);
+            Players[number_of_players] = player;
             player.GetComponent<Player>().name = PlayerName_Inputfield.text;
+            player.GetComponent<Player>().name_text.text = player.GetComponent<Player>().name;
             number_of_players += 1;
         }
     }
     public void GameStart()
     {
         StartMenu_panel.SetActive(false);
-        foreach (Player p in Players)
+        PlayerSample.SetActive(false);
+        foreach (GameObject p in Players)
         {
-            p.gameObject.SetActive(true);
-            p.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.1f, 0.0f);
+            if (p == null)
+            {
+                break;
+            }
+            Debug.Log("not null");
+            p.transform.position = Vector3.zero;
+            p.GetComponent<Player>().health_text.gameObject.transform.position = new Vector3(-7.5f, -1.5f, 0.0f);
+            p.GetComponent<Player>().name_text.gameObject.transform.position = new Vector3(-7.5f, -0.5f, 0.0f);
             p.gameObject.SetActive(false);
         }
         turn_count = -1;
@@ -107,14 +116,15 @@ public class GameManager : MonoBehaviour
     private void CombatEnd()
     {
         VS_text.gameObject.SetActive(false);
-        foreach (Player p in Players)
+        foreach (GameObject player in Players)
         {
+            Player p = player.GetComponent<Player>();
             foreach (Minion_ m in p.temp)
             {
                 Destroy(m.gameObject);
             }
             p.temp = new List<Minion_>();
-            p.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.1f, 0.0f);
+            p.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.5f, 0.0f);
             p._hand.SetActive(true);
             p._battleground.SetActive(true);
             p.gameObject.SetActive(false);
