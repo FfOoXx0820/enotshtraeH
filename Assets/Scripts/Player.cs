@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     public int hand_number;
     public int number_of_minions;
     public int i = -1;
+    public GameObject _Minions;
+    public GameObject _shop;
     public GameObject _hand;
     public GameObject _battleground;
     public TextMeshProUGUI gold_text;

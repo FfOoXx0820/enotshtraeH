@@ -55,26 +55,26 @@ public class Shop : MonoBehaviour
     {
         GameManager.turn_count += 1;
         Debug.Log(GameManager.turn_count);
+        if (!(Player == null))
+        {
+            Player.gameObject.SetActive(false);
+            if (!Player.Freezed)
+            {
+                foreach (GameObject m in Player.shop_minions)
+                {
+                    Destroy(m);
+                }
+            }
+        }
         if (GameManager.turn_count < GameManager.number_of_players)
         {
             timeValue = 200;
             seconds = MathF.Floor(timeValue);
             timer_text.text = seconds.ToString();
-            if (!(Player == null)){
-                Player.gameObject.SetActive(false);
-                if (!Player.Freezed)
-                {
-                    foreach (GameObject m in Player.shop_minions)
-                    {
-                        Destroy(m);
-                    }
-                }
-            }
             Player = GameManager.Players[GameManager.turn_count].GetComponent<Player>();
             GameManager.shopping_phase = true;
             gameObject.SetActive(true);
             Player.gameObject.SetActive(true);
-            UpdateFreezeState(Player.Freezed);
             if (!Player.Freezed)
             {
                 int n = 0;
@@ -92,10 +92,11 @@ public class Shop : MonoBehaviour
                         j += 1;
                     }
                     sample.GetComponent<Minion_>().Minion = minion_pool[j][r];
-                    GameObject minion = Instantiate(sample, new Vector3(-max_minion_number[Player.tier - 1] + 1 + (2.0f * i), 3.0f, 0.0f), Quaternion.identity, gameObject.transform);
+                    GameObject minion = Instantiate(sample, new Vector3(-max_minion_number[Player.tier - 1] + 1 + (2.0f * i), 3.0f, 0.0f), Quaternion.identity, Player._shop.transform);
                     Player.shop_minions.Add(minion);
                 }
             }
+            UpdateFreezeState(false);
             Player.turn += 1;
             tavern_tier_text.text = Player.tier.ToString();
             Player.Gold_Update(-Player.gold);
@@ -105,13 +106,6 @@ public class Shop : MonoBehaviour
         }
         else if (GameManager.turn_count == GameManager.number_of_players)
         {
-            if (!Player.Freezed)
-            {
-                foreach (GameObject m in Player.shop_minions)
-                {
-                    Destroy(m);
-                }
-            }
             Player.gameObject.SetActive(false);
             gameObject.SetActive(false);
             GameManager.turn_count = -1;
@@ -151,7 +145,7 @@ public class Shop : MonoBehaviour
                 j += 1;
             }
             sample.GetComponent<Minion_>().Minion = minion_pool[j][r];
-            GameObject minion = Instantiate(sample, new Vector3(-max_minion_number[Player.tier - 1] + 1 + (2.0f * i), 3.0f, 0.0f), Quaternion.identity, gameObject.transform);
+            GameObject minion = Instantiate(sample, new Vector3(-max_minion_number[Player.tier - 1] + 1 + (2.0f * i), 3.0f, 0.0f), Quaternion.identity, Player._shop.transform);
             Player.shop_minions.Add(minion);
         }
     }

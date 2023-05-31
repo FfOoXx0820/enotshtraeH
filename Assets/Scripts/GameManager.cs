@@ -68,17 +68,18 @@ public class GameManager : MonoBehaviour
     public void StartCombat()
     {
         shopping_phase = false;
+        Fight(Players[0].GetComponent<Player>(), Players[1].GetComponent<Player>());
     }
     public void Fight(Player Player1, Player Player2)
     {
         Player1.gameObject.SetActive(true);
         Player2.gameObject.SetActive(true);
-        Player1._battleground.SetActive(false);
-        Player2._battleground.SetActive(false);
-        Player1._hand.SetActive(false);
-        Player2._hand.SetActive(false);
+        Player1._Minions.SetActive(false);
+        Player2._Minions.SetActive(false);
         Player1.health_text.gameObject.transform.position = new Vector3(0.0f, -4.5f, 0.0f);
+        Player1.name_text.gameObject.transform.position = new Vector3(0.0f, -3.5f, 0.0f);
         Player2.health_text.gameObject.transform.position = new Vector3(0.0f, 4.5f, 0.0f);
+        Player2.name_text.gameObject.transform.position = new Vector3(0.0f, 3.5f, 0.0f);
         VS_text.gameObject.SetActive(true);
         Player1.number_of_minions = Player1.battleground.Count;
         Player2.number_of_minions = Player2.battleground.Count;
@@ -118,6 +119,10 @@ public class GameManager : MonoBehaviour
         VS_text.gameObject.SetActive(false);
         foreach (GameObject player in Players)
         {
+            if (player == null)
+            {
+                break;
+            }
             Player p = player.GetComponent<Player>();
             foreach (Minion_ m in p.temp)
             {
@@ -125,9 +130,9 @@ public class GameManager : MonoBehaviour
             }
             p.temp = new List<Minion_>();
             p.health_text.gameObject.transform.position = new Vector3(-7.5f, -1.5f, 0.0f);
-            p._hand.SetActive(true);
-            p._battleground.SetActive(true);
-            p.gameObject.SetActive(false);
+            p.name_text.gameObject.transform.position = new Vector3(-7.5f, -0.5f, 0.0f);
+            p._Minions.SetActive(true);
+            player.SetActive(false);
         }
         Shop.NextTurn();
     }

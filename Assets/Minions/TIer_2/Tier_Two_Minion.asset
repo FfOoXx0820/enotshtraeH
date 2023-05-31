@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81eb0b00d2301bf46bc6666023297025, type: 3}
   m_Name: Tier_Two_Minion
   m_EditorClassIdentifier: 
-  name: Tier_Two_Minion
+  name: 2
   description: Basic Stat Minion
   type: 0
   default_attack: 2
